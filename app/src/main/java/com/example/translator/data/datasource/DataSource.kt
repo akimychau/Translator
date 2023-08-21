@@ -1,8 +1,8 @@
-package com.example.translator.model.repository
+package com.example.translator.data.datasource
 
 import android.database.Observable
 
-interface Repository<T> {
+interface DataSource<T> {
 
     fun getData(word: String): Observable<T>
 }

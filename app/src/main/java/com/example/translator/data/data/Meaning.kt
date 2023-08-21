@@ -1,4 +1,4 @@
-package com.example.translator.model.data
+package com.example.translator.data.data
 
 import android.os.Parcelable
 import com.google.gson.annotations.Expose

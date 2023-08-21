@@ -1,4 +1,4 @@
-package com.example.translator.model.data
+package com.example.translator.data.data
 
 sealed class AppState {
 
