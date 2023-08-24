@@ -1,8 +1,8 @@
 package com.example.translator.data.repository
 
-import com.example.translator.data.data.DataModel
+import io.reactivex.rxjava3.core.Observable
 
-interface Repository<T> {
+interface Repository<T: Any> {
 
-    fun getData(word: String): List<DataModel>
+    fun getData(word: String): Observable<T>
 }

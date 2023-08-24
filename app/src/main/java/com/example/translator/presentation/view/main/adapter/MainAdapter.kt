@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.translator.data.data.DataModel
 import com.example.translator.databinding.ItemTranscriptionBinding
+import com.example.translator.utils.FIRST_ITEM_INDEX
 
 class MainAdapter(
-    private var onListItemClickListener: OnListItemClickListener,
     private var data: List<DataModel>
 ) : RecyclerView.Adapter<MainAdapter.RecyclerItemViewHolder>() {
 
@@ -26,8 +26,8 @@ class MainAdapter(
 
                 viewBinding.headerTextviewRecyclerItem.text = data.text
 
-//                viewBinding.descriptionTextviewRecyclerItem.text =
-//                    data.meanings[FIRST_ITEM_INDEX].translation.text
+                viewBinding.descriptionTextviewRecyclerItem.text =
+                    data.meanings[FIRST_ITEM_INDEX].translation.text
             }
         }
     }
@@ -44,10 +44,6 @@ class MainAdapter(
 
     override fun onBindViewHolder(holder: RecyclerItemViewHolder, position: Int) {
         holder.bind(data[position])
-    }
-
-    interface OnListItemClickListener {
-        fun onItemClick(data: DataModel)
     }
 }
 

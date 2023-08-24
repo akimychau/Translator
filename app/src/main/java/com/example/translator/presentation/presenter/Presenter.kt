@@ -5,7 +5,7 @@ import com.example.translator.presentation.view.base.View
 
 interface Presenter<T : AppState, V : View> {
 
-    fun getData(word: String, isOnline: Boolean)
+    fun getData(word: String)
 
     fun attachView(view: V)
 

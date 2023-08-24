@@ -1,8 +1,8 @@
 package com.example.translator.domain
 
-import android.database.Observable
+import io.reactivex.rxjava3.core.Observable
 
-interface Interactor<T> {
+interface Interactor<T: Any> {
 
-    fun getData(word: String, isOnline: Boolean): Observable<T>
+    fun getData(word: String): Observable<T>
 }

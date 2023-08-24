@@ -5,5 +5,5 @@ import com.example.translator.data.data.DataModel
 
 interface View {
 
-    fun renderData(appState: List<DataModel>)
+    fun renderData(appState: AppState)
 }
