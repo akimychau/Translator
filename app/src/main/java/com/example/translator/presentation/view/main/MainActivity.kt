@@ -1,7 +1,6 @@
 package com.example.translator.presentation.view.main
 
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.translator.R
@@ -9,30 +8,37 @@ import com.example.translator.data.data.AppState
 import com.example.translator.databinding.ActivityMainBinding
 import com.example.translator.presentation.view.base.BaseActivity
 import com.example.translator.presentation.view.main.adapter.MainAdapter
-import com.example.translator.presentation.viewmodel.BaseViewModel
 import com.example.translator.presentation.viewmodel.MainViewModel
+import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 class MainActivity : BaseActivity<AppState>() {
 
-    override val baseViewModel: BaseViewModel<AppState> by lazy {
-        ViewModelProvider.NewInstanceFactory().create(MainViewModel::class.java)
-    }
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val observer = Observer<AppState> { renderData(it) }
+    override lateinit var viewModel: MainViewModel
 
     private lateinit var binding: ActivityMainBinding
 
     private var adapter: MainAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        AndroidInjection.inject(this)
+
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel = viewModelFactory.create(MainViewModel::class.java)
+        viewModel.subscribe().observe(this@MainActivity) {
+            renderData(it)
+        }
+
         binding.inputLayout.setEndIconOnClickListener {
-            baseViewModel.getData(binding.inputEditText.text.toString())
-                .observe(this@MainActivity, observer)
+            viewModel.getData(binding.inputEditText.text.toString())
         }
     }
 
@@ -72,7 +78,7 @@ class MainActivity : BaseActivity<AppState>() {
         showViewError()
         binding.errorTextview.text = error ?: getString(R.string.undefined_error)
         binding.reloadButton.setOnClickListener {
-            baseViewModel.getData(getString(R.string.hi)).observe(this@MainActivity, observer)
+            viewModel.getData(getString(R.string.hi))
         }
     }
 

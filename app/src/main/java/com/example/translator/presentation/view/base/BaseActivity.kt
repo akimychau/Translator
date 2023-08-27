@@ -6,7 +6,7 @@ import com.example.translator.presentation.viewmodel.BaseViewModel
 
 abstract class BaseActivity<T : AppState> : AppCompatActivity() {
 
-    abstract val baseViewModel: BaseViewModel<T>
+    abstract val viewModel: BaseViewModel<T>
 
     abstract fun renderData(appState: T)
 }

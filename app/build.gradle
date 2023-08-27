@@ -55,8 +55,10 @@ dependencies {
     implementation "com.github.moxy-community:moxy-androidx:2.2.2"
 
     //Dagger
-    implementation 'com.google.dagger:dagger:2.24'
-    kapt 'com.google.dagger:dagger-compiler:2.24'
+    implementation 'com.google.dagger:dagger-android:2.47'
+    implementation 'com.google.dagger:dagger-android-support:2.47'
+    kapt 'com.google.dagger:dagger-android-processor:2.47'
+    kapt 'com.google.dagger:dagger-compiler:2.47'
 
     //Rx-Java
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'

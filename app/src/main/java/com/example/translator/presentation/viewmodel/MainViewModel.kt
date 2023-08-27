@@ -2,37 +2,35 @@ package com.example.translator.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import com.example.translator.data.data.AppState
-import com.example.translator.data.datasource.api.RetrofitImplementation
-import com.example.translator.data.repository.RepositoryImplementation
 import com.example.translator.domain.MainInteractor
+import io.reactivex.rxjava3.disposables.Disposable
+import javax.inject.Inject
 
-class MainViewModel(
-    private val interactor: MainInteractor = MainInteractor(
-        RepositoryImplementation(
-            RetrofitImplementation(),
-            true
-        )
-    )
-) : BaseViewModel<AppState>() {
+class MainViewModel @Inject constructor(private val interactor: MainInteractor) :
+    BaseViewModel<AppState>() {
 
     private var appState: AppState? = null
 
-    override fun getData(word: String): LiveData<AppState> {
+    fun subscribe(): LiveData<AppState> {
+        return liveDataForViewToObserve
+    }
+
+    override fun getData(word: String) {
 
         compositeDisposable.add(
             interactor.getData(word)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .doOnSubscribe { liveDataForViewToObserve.value = AppState.Loading }
-                .subscribe(
-                    { state ->
-                        appState = state
-                        liveDataForViewToObserve.value = state
-                    }, { error ->
-                        liveDataForViewToObserve.value = AppState.Error(error)
-                    }
-                )
+                .doOnSubscribe(doOnSubscribe())
+                .subscribe({ state ->
+                    appState = state
+                    liveDataForViewToObserve.value = state
+                }, { error ->
+                    liveDataForViewToObserve.value = AppState.Error(error)
+                })
         )
-        return super.getData(word)
     }
+
+    private fun doOnSubscribe(): (t: Disposable) -> Unit =
+        { liveDataForViewToObserve.value = AppState.Loading }
 }
