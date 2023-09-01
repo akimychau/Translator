@@ -1,6 +1,5 @@
 package com.example.translator.di
 
-import com.example.translator.App
 import com.example.translator.data.data.DataModel
 import com.example.translator.data.datasource.api.RetrofitImplementation
 import com.example.translator.data.repository.Repository
@@ -14,7 +13,7 @@ val application = module {
     single<Repository<List<DataModel>>> {
         RepositoryImplementation(
             RetrofitImplementation(),
-            ConnectivityListenerImplementation(App.instance.applicationContext)
+            ConnectivityListenerImplementation()
         )
     }
 }
