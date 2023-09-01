@@ -8,9 +8,9 @@ import com.example.translator.data.data.DataModel
 import com.example.translator.databinding.ItemTranscriptionBinding
 import com.example.translator.utils.FIRST_ITEM_INDEX
 
-class MainAdapter(
-    private var data: List<DataModel>
-) : RecyclerView.Adapter<MainAdapter.RecyclerItemViewHolder>() {
+class MainAdapter() : RecyclerView.Adapter<MainAdapter.RecyclerItemViewHolder>() {
+
+    private var data: List<DataModel> = arrayListOf()
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(data: List<DataModel>) {

@@ -4,9 +4,8 @@ import androidx.lifecycle.LiveData
 import com.example.translator.data.data.AppState
 import com.example.translator.domain.MainInteractor
 import io.reactivex.rxjava3.disposables.Disposable
-import javax.inject.Inject
 
-class MainViewModel @Inject constructor(private val interactor: MainInteractor) :
+class MainViewModel(private val interactor: MainInteractor) :
     BaseViewModel<AppState>() {
 
     private var appState: AppState? = null

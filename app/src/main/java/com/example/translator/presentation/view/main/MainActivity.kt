@@ -1,7 +1,6 @@
 package com.example.translator.presentation.view.main
 
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.translator.R
 import com.example.translator.data.data.AppState
@@ -9,62 +8,62 @@ import com.example.translator.databinding.ActivityMainBinding
 import com.example.translator.presentation.view.base.BaseActivity
 import com.example.translator.presentation.view.main.adapter.MainAdapter
 import com.example.translator.presentation.viewmodel.MainViewModel
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity<AppState>() {
 
-    @Inject
-    internal lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    override lateinit var viewModel: MainViewModel
+    override lateinit var model: MainViewModel
 
     private lateinit var binding: ActivityMainBinding
 
-    private var adapter: MainAdapter? = null
+    private val adapter: MainAdapter by lazy { MainAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        AndroidInjection.inject(this)
-
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = viewModelFactory.create(MainViewModel::class.java)
-        viewModel.subscribe().observe(this@MainActivity) {
-            renderData(it)
+        initViewModel()
+        initViews()
+    }
+
+    private fun initViewModel() {
+
+        if (binding.mainActivityRecyclerView.adapter != null) {
+            throw IllegalStateException(getString(R.string.viewmodel_first_initialisation_exception))
         }
 
+        val viewModel: MainViewModel by viewModel()
+        model = viewModel
+        viewModel.subscribe().observe(this@MainActivity) { renderData(it) }
+    }
+
+    private fun initViews() {
+
         binding.inputLayout.setEndIconOnClickListener {
-            viewModel.getData(binding.inputEditText.text.toString())
+            model.getData(binding.inputEditText.text.toString())
         }
+
+        binding.mainActivityRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
+        binding.mainActivityRecyclerView.adapter = adapter
     }
 
     override fun renderData(appState: AppState) {
 
         when (appState) {
             is AppState.Success -> {
-                val dataModel = appState.data
-                if (dataModel.isNullOrEmpty()) {
+                val data = appState.data
+                if (data.isNullOrEmpty()) {
                     showErrorScreen(getString(R.string.empty_server_response_on_success))
                 } else {
                     showViewSuccess()
-                    if (adapter == null) {
-                        binding.rvDescriptionList.layoutManager =
-                            LinearLayoutManager(applicationContext)
-                        binding.rvDescriptionList.adapter =
-                            MainAdapter(dataModel)
-                    } else {
-                        adapter!!.setData(dataModel)
-                    }
+                    adapter.setData(data)
                 }
             }
 
             is AppState.Loading -> {
                 showViewLoading()
-                binding.progressBarHorizontal.visibility = android.view.View.GONE
                 binding.progressBarRound.visibility = android.view.View.VISIBLE
             }
 
@@ -78,7 +77,7 @@ class MainActivity : BaseActivity<AppState>() {
         showViewError()
         binding.errorTextview.text = error ?: getString(R.string.undefined_error)
         binding.reloadButton.setOnClickListener {
-            viewModel.getData(getString(R.string.hi))
+            model.getData(getString(R.string.hi))
         }
     }
 

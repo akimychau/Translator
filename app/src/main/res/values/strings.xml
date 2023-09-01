@@ -10,5 +10,6 @@
     <string name="entry_text">Введите текст</string>
     <string name="description">Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
     <string name="hi">hi</string>
+    <string name="viewmodel_first_initialisation_exception">The ViewModel should be initialised first</string>
 
 </resources>
