@@ -1,20 +1,20 @@
 package com.example.translator.data.datasource.api
 
 import com.example.translator.data.data.DataModel
+import com.example.translator.data.datasource.DataSource
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
-import io.reactivex.rxjava3.core.Observable
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitImplementation : ApiService {
+class RetrofitImplementation : DataSource<List<DataModel>> {
 
-    override fun getData(wordToSearch: String): Observable<List<DataModel>> {
-        return getService(BaseInterceptor.interceptor).getData(wordToSearch)
+    override suspend fun getData(word: String): List<DataModel> {
+        return getService(BaseInterceptor.interceptor).getDataAsync(word).await()
     }
 
     private val gson = GsonBuilder()
@@ -30,7 +30,7 @@ class RetrofitImplementation : ApiService {
         return Retrofit.Builder()
             .baseUrl(BASE_URL_LOCATIONS)
             .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(createOkHttpClient(interceptor))
             .build()
     }

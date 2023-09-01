@@ -3,12 +3,12 @@ package com.example.translator.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import com.example.translator.data.data.AppState
 import com.example.translator.domain.MainInteractor
-import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel(private val interactor: MainInteractor) :
     BaseViewModel<AppState>() {
-
-    private var appState: AppState? = null
 
     fun subscribe(): LiveData<AppState> {
         return liveDataForViewToObserve
@@ -16,20 +16,24 @@ class MainViewModel(private val interactor: MainInteractor) :
 
     override fun getData(word: String) {
 
-        compositeDisposable.add(
-            interactor.getData(word)
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .doOnSubscribe(doOnSubscribe())
-                .subscribe({ state ->
-                    appState = state
-                    liveDataForViewToObserve.value = state
-                }, { error ->
-                    liveDataForViewToObserve.value = AppState.Error(error)
-                })
-        )
+        liveDataForViewToObserve.value = AppState.Loading
+        cancelJob()
+
+        viewModelCoroutineScope.launch { startInteractor(word) }
     }
 
-    private fun doOnSubscribe(): (t: Disposable) -> Unit =
-        { liveDataForViewToObserve.value = AppState.Loading }
+    private suspend fun startInteractor(word: String) =
+        withContext(Dispatchers.IO) {
+            liveDataForViewToObserve.postValue(interactor.getData(word))
+        }
+
+    override fun handleError(error: Throwable) {
+        liveDataForViewToObserve.postValue(AppState.Error(error))
+    }
+
+    override fun onCleared() {
+        liveDataForViewToObserve.value = AppState.Success(null)
+        super.onCleared()
+    }
+
 }
