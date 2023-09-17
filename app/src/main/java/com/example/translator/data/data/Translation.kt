@@ -6,5 +6,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Translation(
-    @Expose val text: String
+    @Expose val text: String?
 ) : Parcelable

@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.translator.data.data.DataModel
 import com.example.translator.databinding.ItemTranscriptionBinding
-import com.example.translator.utils.FIRST_ITEM_INDEX
+import com.example.translator.utils.convertMeaningsToString
 
-class MainAdapter() : RecyclerView.Adapter<MainAdapter.RecyclerItemViewHolder>() {
+class MainAdapter : RecyclerView.Adapter<MainAdapter.RecyclerItemViewHolder>() {
 
     private var data: List<DataModel> = arrayListOf()
 
@@ -27,7 +27,7 @@ class MainAdapter() : RecyclerView.Adapter<MainAdapter.RecyclerItemViewHolder>()
                 viewBinding.headerTextviewRecyclerItem.text = data.text
 
                 viewBinding.descriptionTextviewRecyclerItem.text =
-                    data.meanings[FIRST_ITEM_INDEX].translation.text
+                    convertMeaningsToString(data.meanings!!)
             }
         }
     }

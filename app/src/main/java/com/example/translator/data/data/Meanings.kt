@@ -5,9 +5,9 @@ import com.google.gson.annotations.Expose
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Meaning(
+data class Meanings(
     @Expose val id: Int,
-    @Expose val imageUrl: String,
-    @Expose val soundUrl: String,
-    @Expose val translation: Translation
+    @Expose val imageUrl: String?,
+    @Expose val soundUrl: String?,
+    @Expose val translation: Translation?
 ) : Parcelable

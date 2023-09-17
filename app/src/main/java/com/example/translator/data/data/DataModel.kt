@@ -7,6 +7,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class DataModel(
     @Expose val id: Int,
-    @Expose val meanings: List<Meaning>,
-    @Expose val text: String
+    @Expose val meanings: List<Meanings>?,
+    @Expose val text: String?
 ) : Parcelable
